@@ -5,6 +5,8 @@ use evm::context::{
 };
 use evm::errors::EVMError;
 use evm::stack::StackTrait;
+use evm::memory::MemoryTrait;
+use core::traits::Into;
 
 
 #[generate_trait]
@@ -73,7 +75,19 @@ impl MemoryOperation of MemoryOperationTrait {
     /// Save single byte to memory
     /// # Specification: https://www.evm.codes/#53?fork=shanghai
     fn exec_mstore8(ref self: ExecutionContext) -> Result<(), EVMError> {
-        Result::Ok(())
+    	let popped = self.stack.pop_n(2)?;
+    	let offset = *popped[0];
+    	let value = *popped[1];
+
+    	// get least significant byte of stack value 
+    	let ls_byte = value % 256;
+
+	// converting offset to u32
+	// better way to deal with this?
+	
+	self.memory.store(ls_byte, offset);
+
+	Result::Ok(())
     }
 
     /// 0x55 - SSTORE operation

@@ -77,3 +77,22 @@ fn test_exec_pop_should_stack_underflow() {
         result.unwrap_err() == EVMError::StackError(STACK_UNDERFLOW), 'should return StackUnderflow'
     );
 }
+
+#[test]
+#[available_gas(20000000)]
+fn test_exec_mstore8_input1() {
+    // input1 as defined in the specification: https://www.evm.codes/?fork=shanghai
+
+    // Given 
+    let mut ctx = setup_execution_context();
+    let offset = 0
+    ctx.stack.push(0xff);
+    ctx.stack.push(offset);
+
+    // When 
+    ctx.exec_mstore8();
+
+    // Then 
+    assert(ctx.memory.load(offset) == 0xff, 'memory should contain 0xff')
+
+}
