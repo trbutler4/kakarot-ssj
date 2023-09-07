@@ -11,6 +11,7 @@ use evm::errors::{EVMError, STACK_UNDERFLOW};
 use evm::context::{
     ExecutionContext, ExecutionContextTrait, BoxDynamicExecutionContextDestruct, CallContextTrait,
 };
+use debug::PrintTrait;
 
 
 #[test]
@@ -85,16 +86,14 @@ fn test_exec_mstore8_one_input() {
 
     // Given 
     let mut ctx = setup_execution_context();
-    let offset_u256 = 0_u256;
-    let offset_usize = 0_usize;
     ctx.stack.push(0xff);
-    ctx.stack.push(offset_u256);
+    ctx.stack.push(0_u256);
 
     // When 
     ctx.exec_mstore8();
 
     // Then 
-    let (word, _) = ctx.memory.load(offset_usize);
-    assert(word == 0xff, 'memory should contain 0xff')
-
+    let (word, _) = ctx.memory.load(0_usize);
+    assert(word== 0xff, 'memory should contain 0xff');
 }
+

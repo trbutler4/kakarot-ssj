@@ -80,11 +80,13 @@ impl MemoryOperation of MemoryOperationTrait {
     	let value = *popped[1];
 
     	// get least significant byte of stack value 
-    	let ls_byte = value % 256;
+        let ls_byte = value % 256;
+    	let ls_byte_u8: u8 = ls_byte.try_into().unwrap();
 
 	    // converting offset to u32
 	    // better way to deal with this?
         let offset_u32: usize = offset.try_into().unwrap();
+        //let elements = array![ls_byte].span();
 	    self.memory.store(ls_byte, offset_u32);
 
 	    Result::Ok(())
