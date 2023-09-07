@@ -6,7 +6,7 @@ use evm::context::{
 use evm::errors::EVMError;
 use evm::stack::StackTrait;
 use evm::memory::MemoryTrait;
-use core::traits::Into;
+use core::traits::{Into, TryInto};
 
 
 #[generate_trait]
@@ -82,12 +82,12 @@ impl MemoryOperation of MemoryOperationTrait {
     	// get least significant byte of stack value 
     	let ls_byte = value % 256;
 
-	// converting offset to u32
-	// better way to deal with this?
-	
-	self.memory.store(ls_byte, offset);
+	    // converting offset to u32
+	    // better way to deal with this?
+        let offset_u32: usize = offset.try_into().unwrap();
+	    self.memory.store(ls_byte, offset_u32);
 
-	Result::Ok(())
+	    Result::Ok(())
     }
 
     /// 0x55 - SSTORE operation

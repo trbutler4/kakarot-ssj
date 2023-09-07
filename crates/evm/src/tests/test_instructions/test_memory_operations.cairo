@@ -80,19 +80,21 @@ fn test_exec_pop_should_stack_underflow() {
 
 #[test]
 #[available_gas(20000000)]
-fn test_exec_mstore8_input1() {
+fn test_exec_mstore8_one_input() {
     // input1 as defined in the specification: https://www.evm.codes/?fork=shanghai
 
     // Given 
     let mut ctx = setup_execution_context();
-    let offset = 0
+    let offset_u256 = 0_u256;
+    let offset_usize = 0_usize;
     ctx.stack.push(0xff);
-    ctx.stack.push(offset);
+    ctx.stack.push(offset_u256);
 
     // When 
     ctx.exec_mstore8();
 
     // Then 
-    assert(ctx.memory.load(offset) == 0xff, 'memory should contain 0xff')
+    let (word, _) = ctx.memory.load(offset_usize);
+    assert(word == 0xff, 'memory should contain 0xff')
 
 }
